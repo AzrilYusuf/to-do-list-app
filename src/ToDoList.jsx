@@ -2,14 +2,15 @@ import { useState } from "react";
 
 const ToDoList = () => {
   const [tasks, setTasks] = useState([]);
-  const [newTask, setNewTask] = useState("");
+  const [newTask, setNewTask] = useState({ task: "", deadline: "" });
 
+  // Handle both text and date input
   const handleInputChange = (e) => {
-    setNewTask(e.target.value);
+    setNewTask((t) => ({ ...t, [e.target.name]: e.target.value }));
   };
 
   const addTask = () => {
-    if (newTask.trim() !== "") {
+    if (newTask.task.trim() !== "" && newTask.deadline.trim() !== "") {
       setTasks((t) => [...t, newTask]);
       setNewTask(""); // To clear input element after click add task button
     }
@@ -49,7 +50,14 @@ const ToDoList = () => {
         <input
           type="text"
           placeholder="Enter a task..."
-          value={newTask}
+          name="task"
+          value={newTask.task}
+          onChange={(e) => handleInputChange(e)}
+        />
+        <input
+          type="date"
+          name="deadline"
+          value={newTask.deadline}
           onChange={(e) => handleInputChange(e)}
         />
         <button className="add-button" onClick={addTask}>
@@ -59,7 +67,8 @@ const ToDoList = () => {
       <ol>
         {tasks.map((task, index) => (
           <li key={index}>
-            <span className="text">{task}</span>
+            <span className="text">{task.task}</span>
+            <span className="deadline">{task.deadline}</span>
             <div className="button-task-container">
               <button
                 className="delete-button"
