@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
 import DateTime from "./components/DateTime";
+import Swal from "sweetalert2";
 
 const ToDoList = () => {
+  // This is where the profile is stored
+  const [profile, setProfile] = useState(() => {
+    // Load profile from local storage if exists
+    const savedProfile = localStorage.getItem("profile");
+    return savedProfile ? JSON.parse(savedProfile) : { username: "", job: "" };
+  });
+  
   // This is where the task is stored
   const [tasks, setTasks] = useState(() => {
     const savedTasks = localStorage.getItem("tasks");
@@ -15,6 +23,13 @@ const ToDoList = () => {
     isComplete: false,
   });
 
+  // This will triggers the profile pop-up on first load if profile is incomplete
+  useEffect(() => {
+    if (!profile.username || !profile.job) {
+      editProfile();
+    }
+  }, [profile]);
+
   // Load tasks from local storage when the component mounts
   useEffect(() => {
     const savedTasks = localStorage.getItem("tasks");
@@ -27,6 +42,33 @@ const ToDoList = () => {
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
+
+  const editProfile = () => {
+    Swal.fire({
+      title: "Profile",
+      html:
+        `<input id="swal-input1" class="swal2-input" placeholder="Enter your name" value="${profile.username}">` +
+        `<input id="swal-input2" class="swal2-input" placeholder="Enter your job" value="${profile.job}">`,
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: "Save",
+      preConfirm: () => {
+        const username = document.getElementById("swal-input1").value;
+        const job = document.getElementById("swal-input2").value;
+        if (!username || !job) {
+          Swal.showValidationMessage("Please fill out both fields");
+        }
+        return { username, job };
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const { username, job } = result.value;
+        setProfile({ username, job });
+        // Save profile in local storage
+        localStorage.setItem("profile", JSON.stringify({ username, job }));
+      }
+    });
+  };
 
   // Handle both text and date input
   const handleInputChange = (e) => {
@@ -85,19 +127,36 @@ const ToDoList = () => {
     }
   };
 
+  // To handle checkbox
+  const toggleTaskCompletion = (index) => {
+    const updatedTasks = tasks.map((task, i) =>
+      i === index ? { ...task, isComplete: !task.isComplete } : task
+    );
+    setTasks(updatedTasks);
+  };
+
   // To format the date into dd/mm/yyyy
   const formatDate = (date) => {
-    const day = String(date.getDate()).padStart(2, "0"); // Get day and pad with leading 0 if necessary
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Get month (0-indexed, so +1) and pad
-    const year = date.getFullYear(); // Get the full year (e.g., 2024)
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
 
     return `${day}-${month}-${year}`; // Return the date in dd/mm/yyyy format
   };
 
   return (
     <div className="to-do-list">
-      <h1>To Do List</h1>
-      <DateTime />
+      <header>
+        <div className="profile">
+          <h3 className="username">{profile.username}</h3>
+          <p className="user-job">{profile.job}</p>
+        </div>
+        <div className="edit-profile" onClick={editProfile}>
+          <i className="fa fa-edit" /> Edit
+        </div>
+        <h2>Create your own task</h2>
+        <DateTime />
+      </header>
       <div className="new-task">
         <input
           type="text"
@@ -118,71 +177,94 @@ const ToDoList = () => {
       </div>
       <div className="undone-tasks">
         <ol>
-          {tasks.map((task, index) => (
-            <li key={index}>
-              <input 
-              type="checkbox"
-              checked={}
-              onChange={}
-               />
-              <span className="text">{task.taskMessage}</span>
-              <span className="deadline">Deadline: {task.deadline}</span>
-              <span className="deadline">Created task: {task.createdAt}</span>
-              <div className="button-task-container">
-                <button
-                  className="delete-button"
-                  onClick={() => deleteTask(index)}
+          {tasks.map((task, index) =>
+            task.isComplete === false ? (
+              <li key={index}>
+                <input
+                  type="checkbox"
+                  className={"task-checkbox"}
+                  checked={task.isComplete}
+                  onChange={() => toggleTaskCompletion(index)}
+                />
+                <span
+                  className={`text ${
+                    task.isComplete === true ? "completed" : ""
+                  }`}
                 >
-                  Delete
-                </button>
-                <button
-                  className="move-button"
-                  onClick={() => moveTaskUp(index)}
-                >
-                  Up
-                </button>
-                <button
-                  className="move-button"
-                  onClick={() => moveTaskDown(index)}
-                >
-                  Down
-                </button>
-              </div>
-            </li>
-          ))}
+                  {task.taskMessage}
+                </span>
+                <span className="deadline">Deadline: {task.deadline}</span>
+                <span className="deadline">Created task: {task.createdAt}</span>
+                <div className="button-task-container">
+                  <button
+                    className="delete-button"
+                    onClick={() => deleteTask(index)}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    className="move-button"
+                    onClick={() => moveTaskUp(index)}
+                  >
+                    Up
+                  </button>
+                  <button
+                    className="move-button"
+                    onClick={() => moveTaskDown(index)}
+                  >
+                    Down
+                  </button>
+                </div>
+              </li>
+            ) : null
+          )}
         </ol>
       </div>
-      {/* <div className="done-tasks">
+      <div className="done-tasks">
         <ol>
-          {tasks.map((task, index) => (
-            <li key={index}>
-              <span className="text">{task.taskMessage}</span>
-              <span className="deadline">Deadline: {task.deadline}</span>
-              <span className="deadline">Created task: {task.createdAt}</span>
-              <div className="button-task-container">
-                <button
-                  className="delete-button"
-                  onClick={() => deleteTask(index)}
+          {tasks.map((task, index) =>
+            task.isComplete === true ? (
+              <li key={index}>
+                <input
+                  type="checkbox"
+                  className={"task-checkbox"}
+                  checked={task.isComplete}
+                  onChange={() => toggleTaskCompletion(index)}
+                />
+                <span
+                  className={`text ${
+                    task.isComplete === true ? "completed" : ""
+                  }`}
                 >
-                  Delete
-                </button>
-                <button
-                  className="move-button"
-                  onClick={() => moveTaskUp(index)}
-                >
-                  Up
-                </button>
-                <button
-                  className="move-button"
-                  onClick={() => moveTaskDown(index)}
-                >
-                  Down
-                </button>
-              </div>
-            </li>
-          ))}
+                  {task.taskMessage}
+                </span>
+                <span className="deadline">Deadline: {task.deadline}</span>
+                <span className="deadline">Created task: {task.createdAt}</span>
+                <div className="button-task-container">
+                  <button
+                    className="delete-button"
+                    onClick={() => deleteTask(index)}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    className="move-button"
+                    onClick={() => moveTaskUp(index)}
+                  >
+                    Up
+                  </button>
+                  <button
+                    className="move-button"
+                    onClick={() => moveTaskDown(index)}
+                  >
+                    Down
+                  </button>
+                </div>
+              </li>
+            ) : null
+          )}
         </ol>
-      </div> */}
+      </div>
     </div>
   );
 };
