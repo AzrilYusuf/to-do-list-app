@@ -1,77 +1,9 @@
-/* :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+* {
+  font-family: "Montserrat", sans-serif;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-
-button:hover {
-  border-color: #646cff;
-}
-
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-
-  a:hover {
-    color: #747bff;
-  }
-
-  button {
-    background-color: #f9f9f9;
-  }
-} */
-/**    Mobile First    */
 body {
   margin: 0;
   padding: 0;
@@ -79,48 +11,88 @@ body {
 
 header {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
+  text-align: center;
 }
 
 .profile {
+  position: relative;
+  margin: auto 0;
+}
+
+.username {
+  font-weight: bold;
+  margin: 0;
+}
+
+hr, .user-job {
+  margin: 0;
+}
+
+.edit-profile {
+  position: absolute;
+  right: -30%;
+  top: 30%;
   cursor: pointer;
 }
 
-.to-do-list {
-  font-family: Arial, Helvetica, sans-serif;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  margin: auto;
+h2 {
+  margin-left: 5%;
 }
 
-h1 {
-  font-size: 3.5em;
+.time {
+  margin: auto 0;
+}
+
+#date {
+  margin: 0;
+}
+
+#clock {
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  max-width: 768px;
+  height: 100%;
+  margin: auto;
+  gap: 15px;
 }
 
 .new-task {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  max-height: 55px;
+  padding: 10px 50px;
   gap: 10px;
-  width: 100%;
+  transition: 0.5s;
+}
+
+.expanded {
+  max-height: 400px;
+  padding: 10px 50px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px 2px hsl(0, 0%, 80%);
+  background-color: hsl(0, 0%, 95%);
 }
 
 button {
-  /* padding: 8px 12px; */
   font-size: 1rem;
   border: none;
   border-radius: 5px;
-  /* box-shadow: 1px 1px 1px hsl(0, 0%, 36%); */
   color: hsl(0, 0%, 100%);
   cursor: pointer;
-  transition: background-color 0.5s ease;
 }
 
 .add-button {
-  padding: 15px 18px;
+  padding: 15px;
+  font-size: 1.2rem;
+  width: 100%;
   background-color: hsl(120, 100%, 40%);
-  color: hsl(0, 0%, 100%);
 }
 
 .add-button:hover {
@@ -128,20 +100,16 @@ button {
   color: hsl(0, 0%, 100%);
 }
 
-.delete-button {
+.hide-button {
+  padding: 15px;
+  font-size: 1.2rem;
+  width: 100%;
   background-color: hsl(0, 100%, 50%);
 }
 
-.delete-button:hover {
+.hide-button:hover {
   background-color: hsl(0, 100%, 45%);
-}
-
-.move-button {
-  background-color: hsl(236, 52%, 56%);
-}
-
-.move-button:hover {
-  background-color: hsl(236, 52%, 51%);
+  color: hsl(0, 0%, 100%);
 }
 
 input[type="text"] {
@@ -152,24 +120,63 @@ input[type="text"] {
   color: hsla(0, 0%, 0%, 0.5);
 }
 
-ol {
+.task-input-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 0;
-
+  width: 100%;
 }
 
-li {
-  display: flex;
-  /* justify-content: center; */
-  align-items: center;
+.task-textarea {
+  width: 100%;
+  min-height: 63px;
   padding: 10px;
-  font-size: 1.5rem;
-  /* border: 1px solid hsl(0, 0%, 40%); */
-  border-radius: 10px;
-  box-shadow: 2px 2px 2px hsl(0, 0%, 50%);
-  background-color: hsl(263, 100%, 70%);
+  font-size: 1.2rem;
+  border-radius: 5px;
+  border: 1px solid hsl(0, 0%, 80%);
+}
+
+.date-input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid hsl(0, 0%, 75%);
+  border-radius: 5px;
+  font-size: 16px;
+  color: #333;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: hsl(0, 0%, 80%);
+  background-color: #fff;
+}
+
+.date-input::placeholder {
+  color: #aaa;
+}
+
+.save-task-button {
+  padding: 10px;
+  font-size: 1.2rem;
+  width: 100%;
+  background-color: hsl(120, 100%, 40%);
+}
+
+.save-task-button:hover {
+  background-color: hsl(120, 100%, 35%);
+  color: hsl(0, 0%, 100%);
+}
+
+.status-tasks {
+  margin: 10px 0;
+  color: hsl(0, 0%, 100%);
+  font-weight: 500;
+}
+
+.info {
+  margin-bottom: 10px;
   color: hsl(0, 0%, 100%);
 }
 
@@ -177,16 +184,40 @@ li {
   display: flex;
   flex-direction: column;
   height: 45%;
-  background-color: aqua;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px 2px hsl(0, 0%, 80%);
+  background-color: hsl(242, 100%, 60%);
+}
+
+ol {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  background-color: hsl(0, 0%, 100%);
   gap: 10px;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  font-size: 1.5rem;
+  border-radius: 10px;
+  color: hsl(0, 0%, 0%);
 }
 
 .done-tasks {
   display: flex;
   flex-direction: column;
   height: 45%;
-  background-color: rgb(255, 0, 0);
-  gap: 10px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px 2px hsl(0, 0%, 80%);
+  background-color: hsl(120, 100%, 40%);
+}
+
+
+input[type="checkbox"] {
+  cursor: pointer;
 }
 
 .text {
@@ -208,6 +239,63 @@ li {
   gap: 5px;
 }
 
-.delete-button, .move-button {
+.delete-button {
+  background-color: hsl(0, 100%, 50%);
   padding: 8px 12px;
+}
+
+.delete-button:hover {
+  background-color: hsl(0, 100%, 45%);
+}
+
+.move-button {
+  background-color: hsl(279, 100%, 50%);
+  padding: 8px 12px;
+}
+
+.move-button:hover {
+  background-color: hsl(279, 100%, 45%);
+}
+
+.delete-all {
+  padding: 15px;
+  font-size: 1.2rem;
+  width: 40%;
+  margin: 0 auto;
+  background-color: hsl(0, 100%, 50%);
+}
+
+.delete-all:hover {
+  background-color: hsl(0, 100%, 45%);
+}
+
+@media only screen and (max-width: 576px) {
+  body {
+    font-size: 0.8rem;
+  }
+  
+  h2 {
+    font-size: 18px;
+  }
+  
+  .profile {
+    font-size: 0.8rem;
+  }
+  
+  .time {
+    font-size: 0.8rem;
+  }
+  
+  .container {
+    margin: 0 10px;
+  }
+
+  button, input, textarea, span {
+    font-size: 0.8rem !important;
+  }
+
+  .deadline {
+    margin: 0;
+    font-size: 10px !important;
+  }
 }

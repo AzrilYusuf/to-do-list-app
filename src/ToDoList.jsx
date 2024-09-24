@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import DateTime from "./components/DateTime";
 import Swal from "sweetalert2";
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
 
 const ToDoList = () => {
   // This is where the profile is stored
@@ -9,7 +11,13 @@ const ToDoList = () => {
     const savedProfile = localStorage.getItem("profile");
     return savedProfile ? JSON.parse(savedProfile) : { username: "", job: "" };
   });
-  
+
+  const [isAddingTask, setIsAddingTask] = useState(false);
+  // Toggle task input expansion
+  const toggleTaskInput = () => {
+    setIsAddingTask((prev) => !prev);
+  };
+
   // This is where the task is stored
   const [tasks, setTasks] = useState(() => {
     const savedTasks = localStorage.getItem("tasks");
@@ -28,6 +36,7 @@ const ToDoList = () => {
     if (!profile.username || !profile.job) {
       editProfile();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   // Load tasks from local storage when the component mounts
@@ -135,6 +144,31 @@ const ToDoList = () => {
     setTasks(updatedTasks);
   };
 
+  // Delete all data
+  const deleteAllTask = () => {
+    const tasks = [];
+    if (tasks) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your tasks have been deleted.",
+            icon: "success"
+          });
+          setTasks(tasks);
+        }
+      });
+    }
+  }
+
   // To format the date into dd/mm/yyyy
   const formatDate = (date) => {
     const day = String(date.getDate()).padStart(2, "0");
@@ -145,127 +179,168 @@ const ToDoList = () => {
   };
 
   return (
-    <div className="to-do-list">
+    <>
       <header>
         <div className="profile">
           <h3 className="username">{profile.username}</h3>
+          <hr />
           <p className="user-job">{profile.job}</p>
-        </div>
-        <div className="edit-profile" onClick={editProfile}>
-          <i className="fa fa-edit" /> Edit
+          <div className="edit-profile" onClick={editProfile}>
+          <i className="bi bi-pencil-square" />
+          </div>
         </div>
         <h2>Create your own task</h2>
         <DateTime />
       </header>
-      <div className="new-task">
-        <input
-          type="text"
-          placeholder="Enter a task..."
-          name="taskMessage"
-          value={newTask.taskMessage}
-          onChange={(e) => handleInputChange(e)}
-        />
-        <input
-          type="date"
-          name="deadline"
-          value={newTask.deadline}
-          onChange={(e) => handleInputChange(e)}
-        />
-        <button className="add-button" onClick={addTask}>
-          Add Task
+      <div className="container">
+        {!isAddingTask ? (
+          <div className="new-task">
+            <button className="add-button" onClick={toggleTaskInput}>
+              Add Task
+            </button>
+          </div>
+        ) : (
+          <div className={`new-task ${isAddingTask ? "expanded" : ""}`}>
+            <button className="hide-button" onClick={toggleTaskInput}>
+              Hide
+            </button>
+            <div className="task-input-container">
+              <textarea
+                placeholder="Enter a task..."
+                name="taskMessage"
+                value={newTask.taskMessage}
+                onChange={(e) => handleInputChange(e)}
+                className="task-textarea"
+              />
+              <input
+                type="date"
+                name="deadline"
+                className="date-input"
+                value={newTask.deadline}
+                onChange={(e) => handleInputChange(e)}
+              />
+              <button className="save-task-button" onClick={addTask}>
+                Save Task
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className="undone-tasks">
+          <h3 className="status-tasks">To-do List</h3>
+          {tasks != false ? (
+            <ol>
+              {tasks.map((task, index) =>
+                task.isComplete === false ? (
+                  <li key={index}>
+                    <input
+                      type="checkbox"
+                      className="task-checkbox"
+                      checked={task.isComplete}
+                      onChange={() => toggleTaskCompletion(index)}
+                    />
+                    <span
+                      className={`text ${
+                        task.isComplete === true ? "completed" : ""
+                      }`}
+                    >
+                      {task.taskMessage}
+                    </span>
+                    <span className="deadline">
+                      Created task: {task.createdAt}
+                    </span>
+                    <span className="deadline">Deadline: {task.deadline}</span>
+                    <div className="button-task-container">
+                      <button
+                        className="delete-button"
+                        onClick={() => deleteTask(index)}
+                      >
+                        <i className="bi bi-trash" />
+                      </button>
+                      <button
+                        className="move-button"
+                        onClick={() => moveTaskUp(index)}
+                      >
+                        <i className="bi bi-caret-up" />
+                      </button>
+                      <button
+                        className="move-button"
+                        onClick={() => moveTaskDown(index)}
+                      >
+                        <i className="bi bi-caret-down" />
+                      </button>
+                    </div>
+                  </li>
+                ) : null
+              )}
+            </ol>
+          ) : (
+            <div className="info">
+              You do not have any task yet, click Add Task button to create a
+              new task
+            </div>
+          )}
+        </div>
+        <div className="done-tasks">
+          <h3 className="status-tasks">Completed Task</h3>
+          {tasks != false ? (
+            <ol>
+              {tasks.map((task, index) =>
+                task.isComplete === true ? (
+                  <li key={index}>
+                    <input
+                      type="checkbox"
+                      className={"task-checkbox"}
+                      checked={task.isComplete}
+                      onChange={() => toggleTaskCompletion(index)}
+                    />
+                    <span
+                      className={`text ${
+                        task.isComplete === true ? "completed" : ""
+                      }`}
+                    >
+                      {task.taskMessage}
+                    </span>
+                    <span className="deadline">
+                      Created task: {task.createdAt}
+                    </span>
+                    <span className="deadline">Deadline: {task.deadline}</span>
+                    <div className="button-task-container">
+                      <button
+                        className="delete-button"
+                        onClick={() => deleteTask(index)}
+                      >
+                        <i className="bi bi-trash" />
+                      </button>
+                      <button
+                        className="move-button"
+                        onClick={() => moveTaskUp(index)}
+                      >
+                        <i className="bi bi-caret-up" />
+                      </button>
+                      <button
+                        className="move-button"
+                        onClick={() => moveTaskDown(index)}
+                      >
+                        <i className="bi bi-caret-down" />
+                      </button>
+                    </div>
+                  </li>
+                ) : null
+              )}
+            </ol>
+          ) : (
+            <div className="info">
+              You have not completed any task yet
+            </div>
+          )}
+        </div>
+
+        <button className="delete-all" onClick={() => deleteAllTask()}>
+          Delete All
         </button>
       </div>
-      <div className="undone-tasks">
-        <ol>
-          {tasks.map((task, index) =>
-            task.isComplete === false ? (
-              <li key={index}>
-                <input
-                  type="checkbox"
-                  className={"task-checkbox"}
-                  checked={task.isComplete}
-                  onChange={() => toggleTaskCompletion(index)}
-                />
-                <span
-                  className={`text ${
-                    task.isComplete === true ? "completed" : ""
-                  }`}
-                >
-                  {task.taskMessage}
-                </span>
-                <span className="deadline">Deadline: {task.deadline}</span>
-                <span className="deadline">Created task: {task.createdAt}</span>
-                <div className="button-task-container">
-                  <button
-                    className="delete-button"
-                    onClick={() => deleteTask(index)}
-                  >
-                    Delete
-                  </button>
-                  <button
-                    className="move-button"
-                    onClick={() => moveTaskUp(index)}
-                  >
-                    Up
-                  </button>
-                  <button
-                    className="move-button"
-                    onClick={() => moveTaskDown(index)}
-                  >
-                    Down
-                  </button>
-                </div>
-              </li>
-            ) : null
-          )}
-        </ol>
-      </div>
-      <div className="done-tasks">
-        <ol>
-          {tasks.map((task, index) =>
-            task.isComplete === true ? (
-              <li key={index}>
-                <input
-                  type="checkbox"
-                  className={"task-checkbox"}
-                  checked={task.isComplete}
-                  onChange={() => toggleTaskCompletion(index)}
-                />
-                <span
-                  className={`text ${
-                    task.isComplete === true ? "completed" : ""
-                  }`}
-                >
-                  {task.taskMessage}
-                </span>
-                <span className="deadline">Deadline: {task.deadline}</span>
-                <span className="deadline">Created task: {task.createdAt}</span>
-                <div className="button-task-container">
-                  <button
-                    className="delete-button"
-                    onClick={() => deleteTask(index)}
-                  >
-                    Delete
-                  </button>
-                  <button
-                    className="move-button"
-                    onClick={() => moveTaskUp(index)}
-                  >
-                    Up
-                  </button>
-                  <button
-                    className="move-button"
-                    onClick={() => moveTaskDown(index)}
-                  >
-                    Down
-                  </button>
-                </div>
-              </li>
-            ) : null
-          )}
-        </ol>
-      </div>
-    </div>
+    </>
   );
 };
 
