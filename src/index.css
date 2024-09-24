@@ -7,12 +7,16 @@
 body {
   margin: 0;
   padding: 0;
+  background-color: hsl(184, 78%, 89%);
 }
 
 header {
   display: flex;
   justify-content: space-around;
   text-align: center;
+  background-color: hsl(196, 73%, 38%);
+  color: hsl(0, 0%, 95%);
+  margin-bottom: 10px;
 }
 
 .profile {
@@ -92,11 +96,11 @@ button {
   padding: 15px;
   font-size: 1.2rem;
   width: 100%;
-  background-color: hsl(120, 100%, 40%);
+  background-color: hsl(120, 50%, 50%);
 }
 
 .add-button:hover {
-  background-color: hsl(120, 100%, 35%);
+  background-color: hsl(120, 50%, 45%);
   color: hsl(0, 0%, 100%);
 }
 
@@ -104,11 +108,11 @@ button {
   padding: 15px;
   font-size: 1.2rem;
   width: 100%;
-  background-color: hsl(0, 100%, 50%);
+  background-color: hsl(0, 70%, 50%);
 }
 
 .hide-button:hover {
-  background-color: hsl(0, 100%, 45%);
+  background-color: hsl(0, 70%, 45%);
   color: hsl(0, 0%, 100%);
 }
 
@@ -161,11 +165,11 @@ input[type="text"] {
   padding: 10px;
   font-size: 1.2rem;
   width: 100%;
-  background-color: hsl(120, 100%, 40%);
+  background-color: hsl(120, 50%, 50%);
 }
 
 .save-task-button:hover {
-  background-color: hsl(120, 100%, 35%);
+  background-color: hsl(120, 50%, 45%);
   color: hsl(0, 0%, 100%);
 }
 
@@ -186,7 +190,7 @@ input[type="text"] {
   height: 45%;
   border-radius: 10px;
   box-shadow: 2px 2px 10px 2px hsl(0, 0%, 80%);
-  background-color: hsl(242, 100%, 60%);
+  background-color: hsl(196, 73%, 38%);
 }
 
 ol {
@@ -240,21 +244,21 @@ input[type="checkbox"] {
 }
 
 .delete-button {
-  background-color: hsl(0, 100%, 50%);
+  background-color: hsl(0, 70%, 50%);
   padding: 8px 12px;
 }
 
 .delete-button:hover {
-  background-color: hsl(0, 100%, 45%);
+  background-color: hsl(0, 70%, 45%);
 }
 
 .move-button {
-  background-color: hsl(279, 100%, 50%);
+  background-color: hsl(279, 100%, 60%);
   padding: 8px 12px;
 }
 
 .move-button:hover {
-  background-color: hsl(279, 100%, 45%);
+  background-color: hsl(279, 100%, 55%);
 }
 
 .delete-all {
@@ -262,11 +266,11 @@ input[type="checkbox"] {
   font-size: 1.2rem;
   width: 40%;
   margin: 0 auto;
-  background-color: hsl(0, 100%, 50%);
+  background-color: hsl(0, 70%, 50%);
 }
 
 .delete-all:hover {
-  background-color: hsl(0, 100%, 45%);
+  background-color: hsl(0, 70%, 45%);
 }
 
 @media only screen and (max-width: 576px) {
