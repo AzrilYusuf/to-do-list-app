@@ -29,7 +29,8 @@ header {
   margin: 0;
 }
 
-hr, .user-job {
+hr,
+.user-job {
   margin: 0;
 }
 
@@ -277,24 +278,27 @@ input[type="checkbox"] {
   body {
     font-size: 0.8rem;
   }
-  
+
   h2 {
     font-size: 18px;
   }
-  
+
   .profile {
     font-size: 0.8rem;
   }
-  
+
   .time {
     font-size: 0.8rem;
   }
-  
+
   .container {
     margin: 0 10px;
   }
 
-  button, input, textarea, span {
+  button,
+  input,
+  textarea,
+  span {
     font-size: 0.8rem !important;
   }
 

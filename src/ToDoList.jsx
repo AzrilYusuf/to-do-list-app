@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import DateTime from "./components/DateTime";
 import Swal from "sweetalert2";
-import 'bootstrap-icons/font/bootstrap-icons.css';
-
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 const ToDoList = () => {
   // This is where the profile is stored
@@ -155,19 +154,19 @@ const ToDoList = () => {
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
+        confirmButtonText: "Yes, delete it!",
       }).then((result) => {
         if (result.isConfirmed) {
           Swal.fire({
             title: "Deleted!",
             text: "Your tasks have been deleted.",
-            icon: "success"
+            icon: "success",
           });
           setTasks(tasks);
         }
       });
     }
-  }
+  };
 
   // To format the date into dd/mm/yyyy
   const formatDate = (date) => {
@@ -186,7 +185,7 @@ const ToDoList = () => {
           <hr />
           <p className="user-job">{profile.job}</p>
           <div className="edit-profile" onClick={editProfile}>
-          <i className="bi bi-pencil-square" />
+            <i className="bi bi-pencil-square" />
           </div>
         </div>
         <h2>Create your own task</h2>
@@ -330,15 +329,18 @@ const ToDoList = () => {
               )}
             </ol>
           ) : (
-            <div className="info">
-              You have not completed any task yet
-            </div>
+            <div className="info">You have not completed any task yet</div>
           )}
         </div>
 
         <button className="delete-all" onClick={() => deleteAllTask()}>
           Delete All
         </button>
+        <footer>
+          <i className="bi bi-info-circle-fill" /> Adjust your task list based
+          on the priority with <i className="bi bi-caret-up" /> and{" "}
+          <i className="bi bi-caret-down" /> button
+        </footer>
       </div>
     </>
   );
